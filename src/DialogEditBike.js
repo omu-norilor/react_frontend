@@ -1,34 +1,48 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import React, { useEffect, useMemo, useState} from 'react';
-import AppBar from '@mui/material/AppBar';
+// import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Tooltip from '@mui/material/Tooltip';
+// import Toolbar from '@mui/material/Toolbar';
+// import IconButton from '@mui/material/IconButton';
+// import Typography from '@mui/material/Typography';
+// import Container from '@mui/material/Container';
+// import Tooltip from '@mui/material/Tooltip';
 import TextField from '@mui/material/TextField';
-import Drawer from '@mui/material/Drawer';
+// import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import  {DataGrid}  from '@mui/x-data-grid';
+// import  {DataGrid}  from '@mui/x-data-grid';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import './App.css';
-import useFetch  from './hooks/useFetch';
+import axios from 'axios';
 
+function EditBike(id,body) {
+    axios
+      .request({
+        url: process.env.REACT_APP_API_PREFIX + "/bikes/edit/"+id,
+        method: "POST",
+        data: body
+      });
+  }
+  
+  function GetBike(id,setResponse) {
+    axios
+      .request({
+          url: process.env.REACT_APP_API_PREFIX+"/bikes/get/"+id,
+          method: "GET",
+      })
+      .then((response) => {
+        setResponse(response.data);
+     });
+  }
 
 function DialogEditBike({open, onClose, id}) {
 
-    const [again, setAgain] = useState(1);
-    const [body, setBody] = useState(null);
-    const [getLink, setGetLink] = useState(null);
-    const {data, loading, error} = useFetch(getLink,"GET",null,again);
-    const {data2, loading1, error1} = useFetch("http://127.0.0.1:8000/bikes/edit/"+id,"POST", body,again);
+    const [data, setData] = useState(null);
     const bike = useMemo(() => data?.bike.bike || [], [data]);
-    /// make brand model wheelsize size price sold update on the same time as bike
     const [brand, setBrand] = useState(bike?.brand);
     const [model, setModel] = useState(bike?.model);
     const [wheelsize, setWheelsize] = useState(bike?.wheelsize);
@@ -36,17 +50,17 @@ function DialogEditBike({open, onClose, id}) {
     const [price, setPrice] = useState(bike?.price);
     const [sold, setSold] = useState(bike?.sold);
 
-    const HandleSetGetLink = () => {
-        setGetLink("http://127.0.0.1:8000/bikes/get/"+id);
+    const HandleSetData = (value) => {
+        setData(value);
+    }
+
+    const HandleGet = () =>{
+        GetBike(id,HandleSetData);
     }
 
     useEffect(() => {
-        console.log("DialogEditBike mounted");
-        if(id!==null)
-        {
-            HandleSetGetLink();
-            HandleSetAgain();
-        }
+        if(id!==undefined)
+            HandleGet();
     }, [id]);
 
 
@@ -57,31 +71,14 @@ function DialogEditBike({open, onClose, id}) {
         setSize(bike?.size);
         setPrice(bike?.price);
         setSold(bike?.sold);
-        console.log("brand: "+ bike?.brand);
-        console.log("model: "+ bike?.model);
-        console.log("wheelsize: "+ bike?.wheelsize);
-        console.log("size: "+ bike?.size);
-        console.log("price: "+ bike?.price);
-        console.log("sold: "+ bike?.sold);
 
-    }, [data]);
+    }, [bike]);
 
-    const HandleSetAgain = () => {
-        if(again===1)setAgain(0);
-    else setAgain(1);
+    const HandleEdit = (newBody) => {
+        EditBike(id,newBody);
     }
-    const HandleSetBody = (newBody) => {
-        setBody(newBody);
-        HandleSetAgain();
-    }
-    useEffect(() => {
-        HandleSetAgain();
-    }, [body]);
-    useEffect(() => {
-        HandleSetAgain();
-    }, []);
 
-    const HandleEdit = () => {  
+    const HandleEditBike = () => {  
         const b_id = bike?.b_id;
         const created_at = bike?.created_at;
         const updated_at = bike?.created_at;
@@ -100,7 +97,7 @@ function DialogEditBike({open, onClose, id}) {
         
         let bikeJson = JSON.stringify(bikeData,null,2);
 
-        HandleSetBody(bikeJson);
+        HandleEdit(bikeJson);
 
         console.log("b_id: "+ b_id);
         console.log("brand: "+ brand);
@@ -114,9 +111,6 @@ function DialogEditBike({open, onClose, id}) {
         onClose();
     }
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
     return (
     <Box>
         <Dialog open={open} aria-labelledby="form-dialog-title">
@@ -184,7 +178,7 @@ function DialogEditBike({open, onClose, id}) {
                     Cancel  
                 </Button>
                 <Button  color="primary"
-                onClick={HandleEdit}  
+                onClick={HandleEditBike}  
                 >
                     Edit Bike
                 </Button>

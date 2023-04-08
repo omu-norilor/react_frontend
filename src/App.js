@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import React, { useEffect, useMemo, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,52 +12,54 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import  {DataGrid}  from '@mui/x-data-grid';
 import './App.css';
-import useFetch  from './hooks/useFetch';
+// import useFetch  from './hooks/useFetch';s
 import DialogAddBike from './DialogAddBike';
 import DialogEditBike from './DialogEditBike';
+import axios from 'axios';
 
 import PropTypes from 'prop-types';
+function RequestBikes(setResponse) {
+  axios
+    .request({
+      url: process.env.REACT_APP_API_PREFIX + "/bikes/getall",
+      method: "GET",
+    })
+    .then((response) => {
+       setResponse(response.data);
+    });
+}
+
+function DeleteBike(id) {
+  axios
+    .request({
+      url: process.env.REACT_APP_API_PREFIX + "/bikes/delete/"+id,
+      method: "POST",
+    });
+}
 
 function App() {
 
-  const [again, setAgain] = useState(1);
-  const [deleteAgain, setDeleteAgain] = useState(1);
-  const [deleteLink, setDeleteLink] = useState(null);
-  //const [getLink, setGetLink] = useState(null);
-  const {data, loading, error} = useFetch(process.env.REACT_APP_API_PREFIX+"/bikes/getall","GET",null,again);
-  const {data1, loading1, error1} = useFetch(deleteLink,"POST",null,deleteAgain);
+  const [data, setData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const HandleSetData = (value) => {
+    setData(value);
+  }
+
+  const HandleRequest = () => {
+    RequestBikes(HandleSetData);
+  }
+
   useEffect(() => {
-    handleAgain();
+    HandleRequest();
   }, []);
 
-  useEffect(() => {
-    console.log(deleteLink);
-    handleAgain();
-  }, [deleteLink]);
-
-  useEffect(() => {
-    handleAgain();
-  }, [deleteAgain]);
-
-
   const handleDelete = () => {
-    setDeleteLink(process.env.REACT_APP_API_PREFIX+"/bikes/delete/"+selectedRow?.b_id);
-    handleDeleteAgain();
-    handleAgain();
-  }
-
-  const handleAgain = () => {
-    if(again===1)setAgain(0);
-    else setAgain(1);
-  }
-
-  const handleDeleteAgain = () => {
-    if(deleteAgain===1)setDeleteAgain(0);
-    else setDeleteAgain(1);
+    DeleteBike(selectedRow?.b_id);
+    console.log("delete called on "+ selectedRow?.b_id);
+    HandleRequest();
   }
 
   const handleRowClick = (params) => {
@@ -71,7 +73,7 @@ function App() {
   const handleCloseCreate = () => {
     setOpenCreate(false);
     console.log("close create");
-    handleAgain();
+    HandleRequest();
   };
 
   const handleOpenEdit = () => {
@@ -83,7 +85,7 @@ function App() {
   const handleCloseEdit = () => {
     setOpenEdit(false);
     console.log("close edit");
-    handleAgain();
+    HandleRequest();
   };
 
 
@@ -106,12 +108,7 @@ function App() {
     { field: 'price', headerName: 'Price', width: 150 },
    
   ], []);
-
-  // if(loading) return <h1>Loading you be chillin...</h1>
-
-  // if(error) return <h1>Horror error...</h1>
-
-  console.log(selectedRow?.b_id);
+  
  return (
     <Box sx={{ flexGrow: 1}} >
       <AppBar position="static">
