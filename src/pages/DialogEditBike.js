@@ -16,13 +16,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
-import './App.css';
+import './Bikes.css';
 import axios from 'axios';
 
 function EditBike(id,body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/bikes/edit/"+id,
+        url: process.env.REACT_APP_API_PREFIX + "/api/bikes/edit/"+id,
         method: "POST",
         data: body
       });
@@ -31,7 +31,7 @@ function EditBike(id,body) {
   function GetBike(id,setResponse) {
     axios
       .request({
-          url: process.env.REACT_APP_API_PREFIX+"/bikes/get/"+id,
+          url: process.env.REACT_APP_API_PREFIX+"/api/bikes/get/"+id,
           method: "GET",
       })
       .then((response) => {
@@ -49,7 +49,7 @@ function DialogEditBike({open, onClose, id}) {
     const [size, setSize] = useState(bike?.size);
     const [price, setPrice] = useState(bike?.price);
     const [sold, setSold] = useState(bike?.sold);
-
+    const [errors, setErrors] = useState({});
     const HandleSetData = (value) => {
         setData(value);
     }
@@ -79,6 +79,27 @@ function DialogEditBike({open, onClose, id}) {
     }
 
     const HandleEditBike = () => {  
+
+        const errors = {};
+        if (!brand) {
+            errors.brand = "Brand is required";
+        }
+        if (!model) {
+            errors.model = "Model is required";
+        }
+        if (!["XS", "S", "M", "L", "XL", "XXL"].includes(size)) {
+            errors.size = "Size must be XS, S, M, L, XL, or XXL";
+        }
+        if (![26.0, 27.5, 29.0, 20.0, 24.0, 28.0].includes(Number(wheelsize))) {
+            errors.wheelsize = "Wheel size must be 26.0, 27.5, 29.0, 20.0, 24.0, or 28.0";
+        }
+        if (isNaN(price)) {
+            errors.price = "Price must be a number";
+        }
+        if (Object.keys(errors).length > 0) {
+            setErrors(errors);
+            return;
+        }
         const b_id = bike?.b_id;
         const created_at = bike?.created_at;
         const updated_at = bike?.created_at;
@@ -148,6 +169,8 @@ function DialogEditBike({open, onClose, id}) {
                     fullWidth
                     defaultValue={bike?.wheelsize}
                     onChange={event => {setWheelsize(event.target.value)}}
+                    error={!!errors.wheelsize}
+                    helperText={errors.wheelsize}
                 />
                 <TextField
                     autoFocus
@@ -158,6 +181,8 @@ function DialogEditBike({open, onClose, id}) {
                     fullWidth
                     defaultValue={bike?.size}
                     onChange={event => {setSize(event.target.value)}}
+                    error={!!errors.size}
+                    helperText={errors.size}
                 />
                 <TextField
 

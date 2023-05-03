@@ -16,30 +16,30 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
-import './App.css';
+import './Bikes.css';
 import axios from 'axios';
-// import useFetch  from './hooks/useFetch';
-function AddBike(body) {
+function AddHelmet(body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/bikes/new",
+        url: process.env.REACT_APP_API_PREFIX + "/api/helmets/new",
         method: "POST",
         data: body,
       });
   }
 
-function DialogAddBike({open, onClose}) {
+  function DialogAddHelmet({open, onClose}) {
 
     const [brand, setBrand] = useState("");
     const [model, setModel] = useState("");
-    const [wheelsize, setWheelsize] = useState("");
+    const [htype, setHtype] = useState("");
     const [size, setSize] = useState("");
     const [price, setPrice] = useState("");
+    const [errors, setErrors] = useState({});
     const sold=false;
 
 
     const HandleAdd = (newBody) => {
-        AddBike(newBody);
+        AddHelmet(newBody);
     }
 
     const HandeSetBrand = (newBrand) => {
@@ -48,8 +48,8 @@ function DialogAddBike({open, onClose}) {
     const HandeSetModel = (newModel) => {
         setModel(newModel);
     }
-    const HandeSetWheelsize = (newWheelsize) => {
-        setWheelsize(newWheelsize);
+    const HandleSetHtype = (newHtype) => {
+        setHtype(newHtype);
     }
     const HandeSetSize = (newSize) => {
         setSize(newSize);
@@ -58,29 +58,49 @@ function DialogAddBike({open, onClose}) {
         setPrice(newPrice);
     }
 
-    const HandleAddBike = () => {
+    const HandleAddHelmet = () => {
+    const errors = {};
 
-    let bikeData = {
-        "b_id": "mumumuee-muue-muee-mueu-muueedragnea",
+    if (brand === "") {
+        errors.brand = "Brand cannot be empty";
+    }
+    if (model === "") {
+        errors.model = "Model cannot be empty";
+    }
+    if (!["XS", "S", "M", "L", "XL", "XXL"].includes(size)) {
+        errors.size = "Size must be XS, S, M, L, XL, or XXL";
+    }
+    if (!["full face", "enduro", "trial", "cross-country"].includes(htype)) {
+        errors.htype = "Helmet type must be full face, enduro, trial, or cross-country";
+    }
+    if (price === "") {
+        errors.price = "Price cannot be empty";
+    }
+
+    if (Object.keys(errors).length > 0) {
+        setErrors(errors);
+        return;
+    }
+    let helmetData = {
+        "h_id": "mumumuee-muue-muee-mueu-muueedragnea",
         "brand": brand,
         "model": model,
-        "wheelsize": wheelsize,
+        "h_type": htype,
         "size": size,
         "price": price,
         "sold": sold,
         "created_at": "2001-04-22T16:23:26.668492",
         "updated_at": "2001-04-22T16:23:26.668492"
     };
-    bikeData.wheelsize = parseFloat(bikeData.wheelsize);
-    bikeData.price = parseFloat(bikeData.price);
-    let bikeJson = JSON.stringify(bikeData,null,2);
+    helmetData.price = parseFloat(helmetData.price);
+    let helmetJson = JSON.stringify(helmetData,null,2);
 
-    HandleAdd(bikeJson);
+    HandleAdd(helmetJson);
 
-    console.log("b_id: mumumuee-muue-muee-mueu-muueedragnea");
+    console.log("h_id: mumumuee-muue-muee-mueu-muueedragnea");
     console.log("brand: "+ brand);
     console.log("model: "+ model);
-    console.log("wheelsize: "+ wheelsize);
+    console.log("h_type: "+ htype);
     console.log("size: "+ size);
     console.log("price: "+ price);
     console.log("sold: "+ sold);
@@ -93,10 +113,10 @@ function DialogAddBike({open, onClose}) {
     return (
     <Box>
     <Dialog open={open}  aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Add Bike</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add Helmet</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                To add a bike, please enter the bike details here.
+                To add a helmet, please enter the helmet details here.
             </DialogContentText>
             <TextField
                 autoFocus
@@ -106,6 +126,8 @@ function DialogAddBike({open, onClose}) {
                 type="text"
                 fullWidth
                 onChange={event => { HandeSetBrand(event.target.value) }}
+                error={!!errors.brand}
+                helperText={errors.brand}
             />
             <TextField
                 autoFocus
@@ -115,15 +137,19 @@ function DialogAddBike({open, onClose}) {
                 type="text"
                 fullWidth
                 onChange={event => { HandeSetModel(event.target.value) }}
+                error={!!errors.model}
+                helperText={errors.model}
             />
             <TextField
                 autoFocus
                 margin="dense"
-                id="wheelsize"
-                label="Wheel Size"
+                id="htype"
+                label="Helmet Type"
                 type="text"
                 fullWidth
-                onChange={event => { HandeSetWheelsize(event.target.value) }}
+                onChange={event => { HandleSetHtype(event.target.value) }}
+                error={!!errors.htype}
+                helperText={errors.htype}
             />
             <TextField
                 autoFocus
@@ -133,6 +159,8 @@ function DialogAddBike({open, onClose}) {
                 type="text"
                 fullWidth
                 onChange={event => { HandeSetSize(event.target.value) }}
+                error={!!errors.size}
+                helperText={errors.size}
             />
             <TextField
 
@@ -143,6 +171,8 @@ function DialogAddBike({open, onClose}) {
                 type="text"
                 fullWidth
                 onChange={event => { HandeSetPrice(event.target.value) }}
+                error={!!errors.price}
+                helperText={errors.price}
             />
         </DialogContent>
         <DialogActions>
@@ -152,9 +182,9 @@ function DialogAddBike({open, onClose}) {
                 Cancel  
             </Button>
             <Button  color="primary"
-            onClick={HandleAddBike}
+            onClick={HandleAddHelmet}
             >
-                Add Bike
+                Add Helmet
             </Button>
         </DialogActions>
     </Dialog>
@@ -162,4 +192,4 @@ function DialogAddBike({open, onClose}) {
     );
 }
 
-export default DialogAddBike;
+export default DialogAddHelmet;
