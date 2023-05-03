@@ -13,7 +13,7 @@ import axios from 'axios';
 import { CustomPagination } from './CustomPagination';
 import PropTypes from 'prop-types';
 
-function RequestHelmets(setResponse,page,rowsPerPage) {
+function RequestHelmets(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
       url: process.env.REACT_APP_API_PREFIX + "/api/helmets/getall?page="+page+"&limit="+rowsPerPage,
@@ -21,6 +21,7 @@ function RequestHelmets(setResponse,page,rowsPerPage) {
     })
     .then((response) => {
        setResponse(response.data);
+       setCount(parseInt(response.data?.results));
     });
 }
 
@@ -29,16 +30,6 @@ function DeleteHelmet(id) {
     .request({
       url: process.env.REACT_APP_API_PREFIX + "/api/helmets/delete/"+id,
       method: "POST",
-    });
-}
-function GetCount(setResponse) {
-  axios
-    .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/getcount",
-      method: "GET",
-    })
-    .then((response) => {
-        setResponse(parseInt(response.data?.message));
     });
 }
 
@@ -58,7 +49,7 @@ function Helmets() {
   }
 
   const HandleRequest = () => {
-    RequestHelmets(HandleSetData,currentPage,currentPageSize);
+    RequestHelmets(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
 
   const HandleSetCount = (value) => {
@@ -70,7 +61,6 @@ function Helmets() {
   }, [count]);
 
   useEffect(() => {
-    GetCount(HandleSetCount);
     HandleRequest();
     console.log("Current page: "+currentPage);
     console.log("Current page size: "+currentPageSize);

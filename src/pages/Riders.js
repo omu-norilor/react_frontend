@@ -13,14 +13,15 @@ import axios from 'axios';
 import { CustomPagination } from './CustomPagination';
 import PropTypes from 'prop-types';
 
-function RequestRiders(setResponse,page,rowsPerPage) {
+function RequestRiders(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
       url: process.env.REACT_APP_API_PREFIX + "/api/riders/getall?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
-       setResponse(response.data);
+      setResponse(response.data);
+      setCount(parseInt(response.data?.results));
     });
 }
 
@@ -29,16 +30,6 @@ function DeleteRider(id) {
     .request({
       url: process.env.REACT_APP_API_PREFIX + "/api/riders/delete/"+id,
       method: "POST",
-    });
-}
-function GetCount(setResponse) {
-  axios
-    .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/getcount",
-      method: "GET",
-    })
-    .then((response) => {
-        setResponse(parseInt(response.data?.message));
     });
 }
 
@@ -57,7 +48,7 @@ function Riders() {
   }
 
   const HandleRequest = () => {
-    RequestRiders(HandleSetData,currentPage,currentPageSize);
+    RequestRiders(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
 
   const HandleSetCount = (value) => {
@@ -69,7 +60,6 @@ function Riders() {
   }, [count]);
 
   useEffect(() => {
-    GetCount(HandleSetCount);
     HandleRequest();
     console.log("Current page: "+currentPage);
     console.log("Current page size: "+currentPageSize);

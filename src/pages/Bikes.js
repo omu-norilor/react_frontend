@@ -12,8 +12,9 @@ import DialogEditBike from './DialogEditBike';
 import { CustomPagination } from './CustomPagination';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { Checkbox, MenuItem, Select, TextField } from '@mui/material';
 
-function RequestBikes(setResponse,page,rowsPerPage) {
+function RequestBikes(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
       url: process.env.REACT_APP_API_PREFIX + "/api/bikes/getall?page="+page+"&limit="+rowsPerPage,
@@ -21,8 +22,21 @@ function RequestBikes(setResponse,page,rowsPerPage) {
       method: "GET",
     })
     .then((response) => {
-       setResponse(response.data);
+      setResponse(response.data); 
+      setCount(parseInt(response.data?.results));
     });
+}
+
+function FilterBikes(setResponse,setCount,page,rowsPerPage,compare,price) {
+  axios
+  .request({
+    url: process.env.REACT_APP_API_PREFIX + "/api/bikes/filter?comp="+compare+"&page="+page+"&limit="+rowsPerPage+"&bike_price="+price,
+    method: "GET",
+  })
+  .then((response) => {
+    setResponse(response.data);
+    setCount(parseInt(response.data?.results));
+  });
 }
 
 function DeleteBike(id) {
@@ -30,16 +44,6 @@ function DeleteBike(id) {
     .request({
       url: process.env.REACT_APP_API_PREFIX + "/api/bikes/delete/"+id,
       method: "POST",
-    });
-}
-function GetCount(setResponse) {
-  axios
-    .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/bikes/getcount",
-      method: "GET",
-    })
-    .then((response) => {
-        setResponse(parseInt(response.data?.message));
     });
 }
 
@@ -52,33 +56,62 @@ function Bikes() {
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentPage , setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [compare, setCompare] = useState("gt");
+  const [price, setPrice] = useState(0);
+  const [filter, setFilter] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
   }
 
   const HandleRequest = () => {
-    RequestBikes(HandleSetData,currentPage,currentPageSize);
+    RequestBikes(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
   const HandleSetCount = (value) => {
     setCount(value);
   }
 
+  const HandleFilter = (compare,price) => {
+    FilterBikes(HandleSetData,HandleSetCount,currentPage,currentPageSize,compare,price);
+  }
+
+  const HandleFear = () => {
+    if (filter) {
+      HandleFilter(compare,price);
+    } else {
+      HandleRequest();
+    }
+  }
+  
   useEffect(() => {
     console.log("Count: "+count);
   }, [count]);
 
+  // useEffect(() => {
+  //   console.log("Filter: "+filter);
+  //   console.log("Compare: "+compare);
+  //   console.log("Price: "+price);
+  //   HandleFear();
+  // }, [filter]);
+
+
   useEffect(() => {
-    GetCount(HandleSetCount);
-    HandleRequest();
+    HandleFear();
     console.log("Current page: "+currentPage);
     console.log("Current page size: "+currentPageSize);
-  }, [currentPage,currentPageSize]);
+    console.log("Filter: "+filter);
+    console.log("Count: "+count); 
+    if(filter) {
+    console.log("Compare: "+compare);
+    console.log("Price: "+price);}
+    console .log("########################################");
+
+  }, [currentPage,currentPageSize,filter]);
 
   const handleDelete = () => {
     DeleteBike(selectedRow?.b_id);
     console.log("delete called on "+ selectedRow?.b_id);
-    HandleRequest();
+    HandleFear();
   }
 
   const handleRowClick = (params) => {
@@ -92,7 +125,7 @@ function Bikes() {
   const handleCloseCreate = () => {
     setOpenCreate(false);
     console.log("close create");
-    HandleRequest();
+    HandleFear();
   };
 
   const handleOpenEdit = () => {
@@ -104,9 +137,13 @@ function Bikes() {
   const handleCloseEdit = () => {
     setOpenEdit(false);
     console.log("close edit");
-    HandleRequest();
+    HandleFear();
   };
 
+  const handleCheckboxChange
+  = (event) => {
+    setFilter(event.target.checked);
+  };
 
   DialogAddBike.propTypes = {
     open: PropTypes.bool.isRequired,
@@ -192,9 +229,40 @@ function Bikes() {
           </Toolbar>
           
       </AppBar>
-      {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Select a bike to edit or delete
-          </Typography> */}
+
+      <Toolbar
+        position="static"
+        color="default"
+        elevation={0}
+      >
+          <Select 
+          value={compare}
+          sx={{ m: 1, width: '25ch' , height: '55px'}}
+          onChange={event => {setCompare(event.target.value)}}
+          >
+            <MenuItem value="gt">Greater than</MenuItem>
+            <MenuItem value="lt">Less than</MenuItem>
+            <MenuItem value="eq">Equal to</MenuItem>
+          </Select> 
+          
+          <TextField
+            autoFocus 
+            type="text"
+            fullWidth 
+            label="Filter by price"
+            id="outlined-start-adornment"
+            value={price}
+            onChange={event => {setPrice(event.target.value)}}
+            sx={{ m: 1, width: '25ch', height: '50px'}}
+          />
+          <Checkbox 
+          sx={{ m: 1, height: '50px'}}
+          checked={filter} onChange={handleCheckboxChange}/>
+          
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Filter
+          </Typography>
+      </Toolbar>
       <DataGrid   
             sx={{width:'fit-content',
                   display:'flex' ,
@@ -204,7 +272,6 @@ function Bikes() {
             autoHeight = {true}
             columns={columns}
             rows={rows}
-            //rowCount={rowCountState}
             getRowId={(row) => row.b_id}
             onRowClick={handleRowClick}
                   
