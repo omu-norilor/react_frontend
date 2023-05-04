@@ -32,29 +32,62 @@ function DeleteHelmet(id) {
       method: "POST",
     });
 }
+function GetHelmetRiders(setResponse,id) {
+  axios
+    .request({
+        url: process.env.REACT_APP_API_PREFIX+"/api/helmets/get/"+id,
+        method: "GET",
+    })
+    .then((response) => {
+      setResponse(response.data);
+   });
+}
 
 
 function Helmets() {
 
   const [data, setData] = useState(null);
+  const [riderdata, setRiderData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentPage , setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [riderisLoading, setRiderisLoading] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
   }
 
+  const HandleSetRiderData = (value) => {
+    setRiderData(value);
+  }
+
   const HandleRequest = () => {
+    setIsLoading(true);
     RequestHelmets(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
+  useEffect(() => {
+    setIsLoading(false);
+  }, [data]);
 
   const HandleSetCount = (value) => {
     setCount(value);
   }
+
+  useEffect(() => {
+    if (selectedRow !== null) {
+      GetHelmetRiders(HandleSetRiderData,selectedRow?.b_id);
+      setRiderisLoading(true);
+    }
+  }, [selectedRow]);
+
+  useEffect(() => {
+    setRiderisLoading(false);
+  }, [riderdata]);
+
 
   useEffect(() => {
     console.log("Count: "+count);
@@ -128,6 +161,16 @@ function Helmets() {
    
   ], []);
   
+  const riderRows = useMemo(() => riderdata?.riders || [], [riderdata]);
+  const riderColumns = useMemo(() => [
+    { field: 'r_name', headerName: 'Name', width: 150 },
+    { field: 'height', headerName: 'Height', width: 150 },
+    { field: 'r_weight', headerName: 'Weight', width: 150 },
+    { field: 'specialization', headerName: 'Specialization', width: 150 },
+    { field: 'email', headerName: 'Email', width: 150 },
+    { field: 'phone', headerName: 'Phone', width: 150 },
+  ], []);
+
  return (
     <Box sx={{ flexGrow: 1}} >
       <AppBar position="static">
@@ -196,33 +239,53 @@ function Helmets() {
             Select a bike to edit or delete
           </Typography> */}
       <DataGrid
-            
-            sx={{width:'fit-content',
-                  display:'flex' ,
-                  alignContent:'center',
-                  justifyContent:'center',
-                  }}
-            autoHeight = {true}
-            columns={columns}
-            rows={rows}
-            getRowId={(row) => row.h_id}
-            onRowClick={handleRowClick}
-            
-            localeText={{
-              footerRowSelected: CustomPagination
+        sx={{width:'fit-content',
+            display:'flex' ,
+            alignContent:'center',
+            justifyContent:'center',
             }}
-            components={{
-              Pagination: (props) => 
-              <CustomPagination 
-              pageCount={Math.ceil((count/currentPageSize)) } 
-              currentPage={currentPage}
-              currentPageSize={currentPageSize} 
-              setCurrentPage={setCurrentPage}
-              setCurrentPageSize={setCurrentPageSize} 
-              {...props} 
-              />
-            }}
+        autoHeight = {true}
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.h_id}
+        onRowClick={handleRowClick}
+        loading={isLoading}
+        localeText={{
+          footerRowSelected: CustomPagination
+        }}
+        components={{
+          Pagination: (props) => 
+          <CustomPagination 
+          pageCount={Math.ceil((count/currentPageSize)) } 
+          currentPage={currentPage}
+          currentPageSize={currentPageSize} 
+          
+          setCurrentPage={setCurrentPage}
+          setCurrentPageSize={setCurrentPageSize} 
+          {...props} 
           />
+        }}
+        />
+
+        <DataGrid
+        //open if selected row is not null
+        sx={{width:'fit-content',
+              display:'flex' ,
+              alignContent:'center',
+              justifyContent:'center',
+              }}
+        loading={riderisLoading}
+        autoHeight = {true}
+        columns={riderColumns}
+        rows={riderRows}
+        getRowId={(row) => row.r_id}
+        // initialState={{
+        //   ...data.initialState,
+        //   pagination: { paginationModel: { pageSize: 5 } },
+        // }}
+        // pageSizeOptions={[5, 10, 25]}
+        />
+
       <DialogAddHelmet 
          open={openCreate} 
          onClose={handleCloseCreate}

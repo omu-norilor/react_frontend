@@ -31,7 +31,7 @@ function EditRider(id,body) {
   function GetRider(id,setResponse) {
     axios
       .request({
-          url: process.env.REACT_APP_API_PREFIX+"/api/rider/get/"+id,
+          url: process.env.REACT_APP_API_PREFIX+"/api/riders/get/"+id,
           method: "GET",
       })
       .then((response) => {

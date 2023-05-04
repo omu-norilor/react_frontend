@@ -12,12 +12,11 @@ import DialogEditRider from './DialogEditRider';
 import axios from 'axios';
 import { CustomPagination } from './CustomPagination';
 import PropTypes from 'prop-types';
-import { FormControl, FormGroup, FormLabel, TextField } from '@mui/material';
 
 function RequestRiders(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/getall?page="+page+"&limit="+rowsPerPage,
+      url: process.env.REACT_APP_API_PREFIX + "/api/riders/mostactive?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
@@ -34,52 +33,23 @@ function DeleteRider(id) {
     });
 }
 
-function GetRiderGear(setResponse,id) {
-  axios
-    .request({
-        url: process.env.REACT_APP_API_PREFIX+"/api/riders/get/"+id,
-        method: "GET",
-    })
-    .then((response) => {
-      setResponse(response.data);
-   });
-}
-
 function Riders() {
 
   const [data, setData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [geardata, setGearData] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentPage , setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
   }
 
-  const HandleSetGearData = (value) => {
-    setGearData(value);
-  }
-
-  useEffect(() => {
-    if (selectedRow !== null) {
-      GetRiderGear(HandleSetGearData,selectedRow?.r_id);
-    }
-    
-  }, [selectedRow]);
-
   const HandleRequest = () => {
-    setIsLoading(true);
     RequestRiders(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
-
-  useEffect(() => {
-    setIsLoading(false)
-  }, [data]);
 
   const HandleSetCount = (value) => {
     setCount(value);
@@ -150,9 +120,6 @@ function Riders() {
    
   ], []);
   
-  useEffect(() => {
-    console.log(selectedRow);
-  }, [selectedRow]);
  return (
     <Box sx={{ flexGrow: 1}} >
       <AppBar position="static">
@@ -166,7 +133,7 @@ function Riders() {
           >
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Riders - select a rider to edit or delete
+            Most Active Riders - select a rider to edit or delete
           </Typography>
           
 
@@ -232,7 +199,6 @@ function Riders() {
             rows={rows}
             getRowId={(row) => row.r_id}
             onRowClick={handleRowClick}
-            loading={isLoading}
             
             localeText={{
               footerRowSelected: CustomPagination
@@ -249,41 +215,6 @@ function Riders() {
               />
             }}
           />
-
-          <FormGroup>
-            <FormControl>
-              <FormLabel>Bike</FormLabel>
-              <TextField
-                value={geardata?.bike?.brand || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.bike?.model || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.bike?.size || ""}
-                InputProps={{ readOnly: true }}
-              />
-              
-            </FormControl>
-            <FormControl>
-              <FormLabel>Helmet</FormLabel>
-              <TextField
-                value={geardata?.helmet?.brand || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.helmet?.model || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.helmet?.size || ""}
-                InputProps={{ readOnly: true }}
-              />
-            </FormControl>
-          </FormGroup>
-
       <DialogAddRider 
          open={openCreate} 
          onClose={handleCloseCreate}

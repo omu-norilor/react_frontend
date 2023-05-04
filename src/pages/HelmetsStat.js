@@ -7,79 +7,50 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import  {DataGrid}  from '@mui/x-data-grid';
 import './Bikes.css';
-import DialogAddRider from './DialogAddRider';
-import DialogEditRider from './DialogEditRider';
+import DialogAddHelmet from './DialogAddHelmet';
+import DialogEditHelmet from './DialogEditHelmet';
 import axios from 'axios';
 import { CustomPagination } from './CustomPagination';
 import PropTypes from 'prop-types';
-import { FormControl, FormGroup, FormLabel, TextField } from '@mui/material';
 
-function RequestRiders(setResponse,setCount,page,rowsPerPage) {
+function RequestHelmets(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/getall?page="+page+"&limit="+rowsPerPage,
+      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/mostused?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
-      setResponse(response.data);
-      setCount(parseInt(response.data?.results));
+       setResponse(response.data);
+       setCount(parseInt(response.data?.results));
     });
 }
 
-function DeleteRider(id) {
+function DeleteHelmet(id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/delete/"+id,
+      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/delete/"+id,
       method: "POST",
     });
 }
 
-function GetRiderGear(setResponse,id) {
-  axios
-    .request({
-        url: process.env.REACT_APP_API_PREFIX+"/api/riders/get/"+id,
-        method: "GET",
-    })
-    .then((response) => {
-      setResponse(response.data);
-   });
-}
 
-function Riders() {
+function Helmets() {
 
   const [data, setData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [geardata, setGearData] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentPage , setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
   }
 
-  const HandleSetGearData = (value) => {
-    setGearData(value);
-  }
-
-  useEffect(() => {
-    if (selectedRow !== null) {
-      GetRiderGear(HandleSetGearData,selectedRow?.r_id);
-    }
-    
-  }, [selectedRow]);
-
   const HandleRequest = () => {
-    setIsLoading(true);
-    RequestRiders(HandleSetData,HandleSetCount,currentPage,currentPageSize);
+    RequestHelmets(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
-
-  useEffect(() => {
-    setIsLoading(false)
-  }, [data]);
 
   const HandleSetCount = (value) => {
     setCount(value);
@@ -96,8 +67,8 @@ function Riders() {
   }, [currentPage,currentPageSize]);
 
   const handleDelete = () => {
-    DeleteRider(selectedRow?.r_id);
-    console.log("delete called on "+ selectedRow?.r_id);
+    DeleteHelmet(selectedRow?.h_id);
+    console.log("delete called on "+ selectedRow?.h_id);
     HandleRequest();
   }
 
@@ -105,6 +76,14 @@ function Riders() {
     setSelectedRow(params.row);
   };
 
+  const handlePageChange = (params) => {
+    setCurrentPage(params.page);
+  };
+
+  const handlePageSizeChange = (params) => {
+    setCurrentPageSize(params.pageSize);
+  };
+  
 
   const handleOpenCreate = () => {
     setOpenCreate(true);
@@ -129,30 +108,26 @@ function Riders() {
   };
 
 
-  DialogAddRider.propTypes = {
+  DialogAddHelmet.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
   };
 
-  DialogEditRider.propTypes = {
+  DialogEditHelmet.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
   };
   
-  const rows = useMemo(() => data?.riders || [], [data]);
+  const rows = useMemo(() => data?.helmets || [], [data]);
   const columns = useMemo(() => [
-    { field: 'r_name', headerName: 'Name', width: 150 },
-    { field: 'height', headerName: 'Height', width: 150 },
-    { field: 'r_weight', headerName: 'Weight', width: 150 },
-    { field: 'specialization', headerName: 'Specialization', width: 150 },
-    { field: 'email', headerName: 'Email', width: 150 },
-    { field: 'phone', headerName: 'Phone', width: 150 },
+    { field: 'brand', headerName: 'Brand', width: 150 },
+    { field: 'model', headerName: 'Model', width: 150 },
+    { field: 'h_type', headerName: 'Helmet Type', width: 150 },
+    { field: 'size', headerName: 'Size', width: 150 },
+    { field: 'price', headerName: 'Price', width: 150 },
    
   ], []);
   
-  useEffect(() => {
-    console.log(selectedRow);
-  }, [selectedRow]);
  return (
     <Box sx={{ flexGrow: 1}} >
       <AppBar position="static">
@@ -166,12 +141,12 @@ function Riders() {
           >
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Riders - select a rider to edit or delete
+            Most Used Helmets - select a helmet to edit or delete
           </Typography>
           
 
           <Typography variant="h6" component="div" align='center' sx={{ flexGrow: 1 }}>
-          {selectedRow && (<p>Selected rider: {selectedRow.name} {selectedRow.email}</p>
+          {selectedRow && (<p>Selected helmet: {selectedRow.brand} {selectedRow.model}</p>
           )}
           </Typography>
           
@@ -230,9 +205,8 @@ function Riders() {
             autoHeight = {true}
             columns={columns}
             rows={rows}
-            getRowId={(row) => row.r_id}
+            getRowId={(row) => row.h_id}
             onRowClick={handleRowClick}
-            loading={isLoading}
             
             localeText={{
               footerRowSelected: CustomPagination
@@ -249,53 +223,18 @@ function Riders() {
               />
             }}
           />
-
-          <FormGroup>
-            <FormControl>
-              <FormLabel>Bike</FormLabel>
-              <TextField
-                value={geardata?.bike?.brand || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.bike?.model || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.bike?.size || ""}
-                InputProps={{ readOnly: true }}
-              />
-              
-            </FormControl>
-            <FormControl>
-              <FormLabel>Helmet</FormLabel>
-              <TextField
-                value={geardata?.helmet?.brand || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.helmet?.model || ""}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                value={geardata?.helmet?.size || ""}
-                InputProps={{ readOnly: true }}
-              />
-            </FormControl>
-          </FormGroup>
-
-      <DialogAddRider 
+      <DialogAddHelmet 
          open={openCreate} 
          onClose={handleCloseCreate}
       />
 
-      <DialogEditRider 
+      <DialogEditHelmet 
          open={openEdit}
          onClose={handleCloseEdit}
-         id={selectedRow?.r_id}
+         id={selectedRow?.h_id}
       />
     </Box>
   );
 }
 
-export default Riders; 
+export default Helmets; 

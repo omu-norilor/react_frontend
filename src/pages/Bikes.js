@@ -46,10 +46,21 @@ function DeleteBike(id) {
       method: "POST",
     });
 }
+function GetBikeRiders(setResponse,id) {
+  axios
+    .request({
+        url: process.env.REACT_APP_API_PREFIX+"/api/bikes/get/"+id,
+        method: "GET",
+    })
+    .then((response) => {
+      setResponse(response.data);
+   });
+}
 
 function Bikes() {
 
   const [data, setData] = useState(null);
+  const [riderdata, setRiderData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -59,9 +70,15 @@ function Bikes() {
   const [compare, setCompare] = useState("gt");
   const [price, setPrice] = useState(0);
   const [filter, setFilter] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [riderisLoading, setRiderisLoading] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
+  }
+
+  const HandleSetRiderData = (value) => {
+    setRiderData(value);
   }
 
   const HandleRequest = () => {
@@ -77,11 +94,28 @@ function Bikes() {
 
   const HandleFear = () => {
     if (filter) {
+      setIsLoading(true);
       HandleFilter(compare,price);
     } else {
+      setIsLoading(true);
       HandleRequest();
     }
   }
+  useEffect(() => {
+    if (selectedRow !== null) {
+      GetBikeRiders(HandleSetRiderData,selectedRow?.b_id);
+    }
+    
+  }, [selectedRow]);
+
+  useEffect(() => {
+    setRiderisLoading(false);
+  }, [riderdata]);
+
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [data]);
   
   useEffect(() => {
     console.log("Count: "+count);
@@ -107,6 +141,10 @@ function Bikes() {
     console .log("########################################");
 
   }, [currentPage,currentPageSize,filter]);
+
+  useEffect(() => {
+    console.log(riderdata);
+  }, [riderdata]);
 
   const handleDelete = () => {
     DeleteBike(selectedRow?.b_id);
@@ -163,6 +201,16 @@ function Bikes() {
     { field: 'size', headerName: 'Size', width: 150 },
     { field: 'price', headerName: 'Price', width: 150 },
    
+  ], []);
+
+  const riderRows = useMemo(() => riderdata?.riders || [], [riderdata]);
+  const riderColumns = useMemo(() => [
+    { field: 'r_name', headerName: 'Name', width: 150 },
+    { field: 'height', headerName: 'Height', width: 150 },
+    { field: 'r_weight', headerName: 'Weight', width: 150 },
+    { field: 'specialization', headerName: 'Specialization', width: 150 },
+    { field: 'email', headerName: 'Email', width: 150 },
+    { field: 'phone', headerName: 'Phone', width: 150 },
   ], []);
   
  return (
@@ -264,33 +312,56 @@ function Bikes() {
           </Typography>
       </Toolbar>
       <DataGrid   
-            sx={{width:'fit-content',
-                  display:'flex' ,
-                  alignContent:'center',
-                  justifyContent:'center',
-                  }}
-            autoHeight = {true}
-            columns={columns}
-            rows={rows}
-            getRowId={(row) => row.b_id}
-            onRowClick={handleRowClick}
-                  
-            localeText={{
-              footerRowSelected: CustomPagination
-            }}
-            components={{
-              Pagination: (props) => 
-              <CustomPagination 
-              pageCount={Math.ceil((count/currentPageSize)) } 
-              currentPage={currentPage}
-              currentPageSize={currentPageSize} 
-              setCurrentPage={setCurrentPage}
-              setCurrentPageSize={setCurrentPageSize} 
-              {...props} 
-              />
-            }}
-            
+        sx={{width:'fit-content',
+              display:'flex' ,
+              alignContent:'center',
+              justifyContent:'center',
+              }}
+        autoHeight = {true}
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.b_id}
+        onRowClick={handleRowClick}
+        loading={isLoading}
+        localeText={{
+          footerRowSelected: CustomPagination
+        }}
+        components={{
+          Pagination: (props) => 
+          <CustomPagination 
+          pageCount={Math.ceil((count/currentPageSize)) } 
+          currentPage={currentPage}
+          currentPageSize={currentPageSize} 
+          setCurrentPage={setCurrentPage}
+          setCurrentPageSize={setCurrentPageSize} 
+          {...props} 
           />
+        }} 
+      />
+
+      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} open={selectedRow !== null && selectedRow !== undefined}>
+        Riders that use this bike model
+      </Typography>
+
+      <DataGrid
+        //open if selected row is not null
+        sx={{width:'fit-content',
+              display:'flex' ,
+              alignContent:'center',
+              justifyContent:'center',
+              }}
+        loading={riderisLoading}
+        autoHeight = {true}
+        columns={riderColumns}
+        rows={riderRows}
+        getRowId={(row) => row.r_id}
+        // initialState={{
+        // ...data.initialState,
+        // pagination: { paginationModel: { pageSize: 5 } },
+        // }}
+        // pageSizeOptions={[5, 10, 25]}
+        />
+        
 
       <DialogAddBike 
          open={openCreate} 
