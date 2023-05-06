@@ -17,7 +17,7 @@ import { Checkbox, MenuItem, Select, TextField } from '@mui/material';
 function RequestBikes(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/bikes/getall?page="+page+"&limit="+rowsPerPage,
+      url: "/api/bikes/getall?page="+page+"&limit="+rowsPerPage,
       // http://127.0.0.1:8000/api/bikes/getall?page=1&limit=5
       method: "GET",
     })
