@@ -22,7 +22,7 @@ import axios from 'axios';
 function EditEventrider(e_id,r_id,body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/eventrider/edit?event_id="+e_id+"&rider_id="+r_id,
+        url: "/api/eventrider/edit?event_id="+e_id+"&rider_id="+r_id,
         method: "POST",
         data: body
       });
@@ -31,7 +31,7 @@ function EditEventrider(e_id,r_id,body) {
   function GetEventrider(e_id,r_id,setResponse) {
     axios
       .request({
-          url: process.env.REACT_APP_API_PREFIX+"/api/eventrider/getbyids?event_id="+e_id+"&rider_id="+r_id,
+          url: "/api/eventrider/getbyids?event_id="+e_id+"&rider_id="+r_id,
           method: "GET",
       })
       .then((response) => {

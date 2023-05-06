@@ -21,7 +21,7 @@ import axios from 'axios';
 function AddHelmet(body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/helmets/new",
+        url:  "/api/helmets/new",
         method: "POST",
         data: body,
       });

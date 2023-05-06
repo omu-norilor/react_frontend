@@ -28,14 +28,14 @@ function RequestHelmets(setResponse,setCount,page,rowsPerPage) {
 function DeleteHelmet(id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/delete/"+id,
+      url: "/api/helmets/delete/"+id,
       method: "POST",
     });
 }
 function GetHelmetRiders(setResponse,id) {
   axios
     .request({
-        url: process.env.REACT_APP_API_PREFIX+"/api/helmets/get/"+id,
+        url: "/api/helmets/get/"+id,
         method: "GET",
     })
     .then((response) => {

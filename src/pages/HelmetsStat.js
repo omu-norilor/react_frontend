@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 function RequestHelmets(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/mostused?page="+page+"&limit="+rowsPerPage,
+      url: "/api/helmets/mostused?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
@@ -28,7 +28,7 @@ function RequestHelmets(setResponse,setCount,page,rowsPerPage) {
 function DeleteHelmet(id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/delete/"+id,
+      url: "/api/helmets/delete/"+id,
       method: "POST",
     });
 }

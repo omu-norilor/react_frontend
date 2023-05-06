@@ -30,7 +30,7 @@ function RequestBikes(setResponse,setCount,page,rowsPerPage) {
 function FilterBikes(setResponse,setCount,page,rowsPerPage,compare,price) {
   axios
   .request({
-    url: process.env.REACT_APP_API_PREFIX + "/api/bikes/filter?comp="+compare+"&page="+page+"&limit="+rowsPerPage+"&bike_price="+price,
+    url:  "/api/bikes/filter?comp="+compare+"&page="+page+"&limit="+rowsPerPage+"&bike_price="+price,
     method: "GET",
   })
   .then((response) => {
@@ -42,14 +42,14 @@ function FilterBikes(setResponse,setCount,page,rowsPerPage,compare,price) {
 function DeleteBike(id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/bikes/delete/"+id,
+      url: "/api/bikes/delete/"+id,
       method: "POST",
     });
 }
 function GetBikeRiders(setResponse,id) {
   axios
     .request({
-        url: process.env.REACT_APP_API_PREFIX+"/api/bikes/get/"+id,
+        url: "/api/bikes/get/"+id,
         method: "GET",
     })
     .then((response) => {

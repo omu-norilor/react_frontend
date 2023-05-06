@@ -1,2 +1,2 @@
-/api/* http://34.136.130.48:8000/api/:splat 200
+/api/* http://rares-the.chickenkiller.com/api/:splat 200
 /* /index.html 200

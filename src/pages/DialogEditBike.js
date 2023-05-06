@@ -22,7 +22,7 @@ import axios from 'axios';
 function EditBike(id,body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/bikes/edit/"+id,
+        url: "/api/bikes/edit/"+id,
         method: "POST",
         data: body
       });
@@ -31,7 +31,7 @@ function EditBike(id,body) {
   function GetBike(id,setResponse) {
     axios
       .request({
-          url: process.env.REACT_APP_API_PREFIX+"/api/bikes/get/"+id,
+          url: "/api/bikes/get/"+id,
           method: "GET",
       })
       .then((response) => {

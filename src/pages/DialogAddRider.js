@@ -22,7 +22,7 @@ import axios from 'axios';
 function AddRider(body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/riders/new",
+        url:  "/api/riders/new",
         method: "POST",
         data: body,
       });

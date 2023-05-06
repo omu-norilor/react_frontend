@@ -22,7 +22,7 @@ import axios from 'axios';
 function EditHelmet(id,body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/helmets/edit/"+id,
+        url: "/api/helmets/edit/"+id,
         method: "POST",
         data: body
       });
@@ -31,7 +31,7 @@ function EditHelmet(id,body) {
   function GetHelmet(id,setResponse) {
     axios
       .request({
-          url: process.env.REACT_APP_API_PREFIX+"/api/helmets/get/"+id,
+          url: "/api/helmets/get/"+id,
           method: "GET",
       })
       .then((response) => {

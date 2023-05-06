@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 function RequestRiders(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/mostactive?page="+page+"&limit="+rowsPerPage,
+      url: "/api/riders/mostactive?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
@@ -28,7 +28,7 @@ function RequestRiders(setResponse,setCount,page,rowsPerPage) {
 function DeleteRider(id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/delete/"+id,
+      url: "/api/riders/delete/"+id,
       method: "POST",
     });
 }

@@ -22,7 +22,7 @@ import axios from 'axios';
 function AddBike(body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/bikes/new",
+        url:  "/api/bikes/new",
         method: "POST",
         data: body,
       });

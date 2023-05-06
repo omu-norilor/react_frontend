@@ -22,7 +22,7 @@ import axios from 'axios';
 function AddEventrider(body) {
     axios
       .request({
-        url: process.env.REACT_APP_API_PREFIX + "/api/eventrider/new",
+        url:  "/api/eventrider/new",
         method: "POST",
         data: body,
       });

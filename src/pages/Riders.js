@@ -17,7 +17,7 @@ import { FormControl, FormGroup, FormLabel, TextField } from '@mui/material';
 function RequestRiders(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/getall?page="+page+"&limit="+rowsPerPage,
+      url: "/api/riders/getall?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
@@ -29,7 +29,7 @@ function RequestRiders(setResponse,setCount,page,rowsPerPage) {
 function DeleteRider(id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/riders/delete/"+id,
+      url: "/api/riders/delete/"+id,
       method: "POST",
     });
 }
@@ -37,7 +37,7 @@ function DeleteRider(id) {
 function GetRiderGear(setResponse,id) {
   axios
     .request({
-        url: process.env.REACT_APP_API_PREFIX+"/api/riders/get/"+id,
+        url: "/api/riders/get/"+id,
         method: "GET",
     })
     .then((response) => {

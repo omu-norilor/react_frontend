@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 function RequestEventrider(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/eventrider/getall?page="+page+"&limit="+rowsPerPage,
+      url: "/api/eventrider/getall?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
@@ -28,7 +28,7 @@ function RequestEventrider(setResponse,setCount,page,rowsPerPage) {
 function DeleteEventrider(e_id,r_id) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/eventrider/delete/?event_id="+e_id+"&rider_id="+r_id,
+      url: "/api/eventrider/delete/?event_id="+e_id+"&rider_id="+r_id,
       method: "POST",
     });
 }
