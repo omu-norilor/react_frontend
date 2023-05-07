@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 function RequestHelmets(setResponse,setCount,page,rowsPerPage) {
   axios
     .request({
-      url: process.env.REACT_APP_API_PREFIX + "/api/helmets/getall?page="+page+"&limit="+rowsPerPage,
+      url: "/api/helmets/getall?page="+page+"&limit="+rowsPerPage,
       method: "GET",
     })
     .then((response) => {
