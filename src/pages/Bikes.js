@@ -195,8 +195,14 @@ function Bikes() {
   
   // const rows = useMemo(() => data?.bikes || [], [data]); //data?.bikes
   const rows = useMemo(() => {
-    return (data?.bikes || []).map((bike) => {
-      return { ...bike, counts: data?.counts };
+    if (!data) {
+      return [];
+    }
+    return data.bikes.map((bike, index) => {
+      return {
+        ...bike,
+        count: data.counts[index],
+      };
     });
   }, [data]);
   const columns = useMemo(() => [
