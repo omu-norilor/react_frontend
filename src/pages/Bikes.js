@@ -193,14 +193,14 @@ function Bikes() {
     onClose: PropTypes.func.isRequired,
   };
   
-  const rows = useMemo(() => data?.bikes || [], [data]);
+  const rows = useMemo(() => data || [], [data]); //data?.bikes
   const columns = useMemo(() => [
-    { field: 'brand', headerName: 'Brand', width: 150 },
-    { field: 'model', headerName: 'Model', width: 150 },
-    { field: 'wheelsize', headerName: 'Wheel Size', width: 150 },
-    { field: 'size', headerName: 'Size', width: 150 },
-    { field: 'price', headerName: 'Price', width: 150 },
-    { field: 'counts', headerName: 'No. of Riders', width: 150, valueGetter: (params) => data?.counts },
+    { field: 'brand', headerName: 'Brand', width: 150, valueGetter: (params) => params.row.bikes.brand },
+    { field: 'model', headerName: 'Model', width: 150, valueGetter: (params) => params.row.bikes.model },
+    { field: 'wheelsize', headerName: 'Wheel Size', width: 150, valueGetter: (params) => params.row.bikes.wheelsize },
+    { field: 'size', headerName: 'Size', width: 150, valueGetter: (params) => params.row.bikes.size },
+    { field: 'price', headerName: 'Price', width: 150, valueGetter: (params) => params.row.bikes.price },
+    { field: 'counts', headerName: 'No. of Riders', width: 150, valueGetter: (params) => params.row.counts },
    
   ], []);
 
