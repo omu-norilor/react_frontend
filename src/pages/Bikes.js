@@ -193,14 +193,19 @@ function Bikes() {
     onClose: PropTypes.func.isRequired,
   };
   
-  const rows = useMemo(() => data || [], [data]); //data?.bikes
+  // const rows = useMemo(() => data?.bikes || [], [data]); //data?.bikes
+  const rows = useMemo(() => {
+    return (data?.bikes || []).map((bike) => {
+      return { ...bike, counts: data?.counts };
+    });
+  }, [data]);
   const columns = useMemo(() => [
-    { field: 'brand', headerName: 'Brand', width: 150, valueGetter: (params) => {console.log(params);return params.row.bikes.brand} },
-    { field: 'model', headerName: 'Model', width: 150, valueGetter: (params) => {console.log(params.row);return params.row.bikes.model} },
-    { field: 'wheelsize', headerName: 'Wheel Size', width: 150, valueGetter: (params) => {return params.row.bikes.wheelsize} },
-    { field: 'size', headerName: 'Size', width: 150, valueGetter: (params) =>  {return params.row.bikes.size} },
-    { field: 'price', headerName: 'Price', width: 150, valueGetter: (params) => {return params.row.bikes.price} },
-    { field: 'counts', headerName: 'No. of Riders', width: 150, valueGetter: (params) => {return params.row.counts} },
+    { field: 'brand', headerName: 'Brand', width: 150 },
+    { field: 'model', headerName: 'Model', width: 150},
+    { field: 'wheelsize', headerName: 'Wheel Size', width: 150 },
+    { field: 'size', headerName: 'Size', width: 150},
+    { field: 'price', headerName: 'Price', width: 150},
+    { field: 'counts', headerName: 'No. of Riders', width: 150 },
    
   ], []);
 
