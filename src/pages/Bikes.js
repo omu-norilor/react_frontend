@@ -200,6 +200,7 @@ function Bikes() {
     { field: 'wheelsize', headerName: 'Wheel Size', width: 150 },
     { field: 'size', headerName: 'Size', width: 150 },
     { field: 'price', headerName: 'Price', width: 150 },
+    { field: 'counts', headerName: 'No. of Riders', width: 150, valueGetter: (params) => data?.counts },
    
   ], []);
 
