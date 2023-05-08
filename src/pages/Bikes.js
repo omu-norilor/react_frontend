@@ -195,8 +195,8 @@ function Bikes() {
   
   const rows = useMemo(() => data || [], [data]); //data?.bikes
   const columns = useMemo(() => [
-    { field: 'brand', headerName: 'Brand', width: 150, valueGetter: (params) => {return params.row.bikes.brand} },
-    { field: 'model', headerName: 'Model', width: 150, valueGetter: (params) => {return params.row.bikes.model} },
+    { field: 'brand', headerName: 'Brand', width: 150, valueGetter: (params) => {console.log(params);return params.row.bikes.brand} },
+    { field: 'model', headerName: 'Model', width: 150, valueGetter: (params) => {console.log(params.row);return params.row.bikes.model} },
     { field: 'wheelsize', headerName: 'Wheel Size', width: 150, valueGetter: (params) => {return params.row.bikes.wheelsize} },
     { field: 'size', headerName: 'Size', width: 150, valueGetter: (params) =>  {return params.row.bikes.size} },
     { field: 'price', headerName: 'Price', width: 150, valueGetter: (params) => {return params.row.bikes.price} },
