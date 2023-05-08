@@ -198,7 +198,8 @@ function Bikes() {
     if (!data) {
       return [];
     }
-    return data.bikes.map((bike, index) => {
+    return data.bikes.map((bike) => {
+      const index=data.bikes.indexOf(bike);
       return {
         ...bike,
         count: data.counts[index],
