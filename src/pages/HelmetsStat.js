@@ -125,7 +125,7 @@ function Helmets() {
     { field: 'h_type', headerName: 'Helmet Type', width: 150 },
     { field: 'size', headerName: 'Size', width: 150 },
     { field: 'price', headerName: 'Price', width: 150 },
-   
+    { field: 'no_riders', headerName: 'No. of Riders', width: 150 },
   ], []);
   
  return (

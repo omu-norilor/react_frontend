@@ -193,19 +193,7 @@ function Bikes() {
     onClose: PropTypes.func.isRequired,
   };
   
-  // const rows = useMemo(() => data?.bikes || [], [data]); //data?.bikes
-  const rows = useMemo(() => {
-    if (!data) {
-      return [];
-    }
-    return data.bikes.map((bike) => {
-      const index=data.bikes.indexOf(bike);
-      return {
-        ...bike,
-        count: data.counts[index],
-      };
-    });
-  }, [data]);
+   const rows = useMemo(() => data?.bikes || [], [data]); //data?.bikes
   const columns = useMemo(() => [
     { field: 'brand', headerName: 'Brand', width: 150 },
     { field: 'model', headerName: 'Model', width: 150},
