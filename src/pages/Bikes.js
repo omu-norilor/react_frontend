@@ -60,7 +60,7 @@ function GetBikeRiders(setResponse,id) {
 function Bikes() {
 
   const [data, setData] = useState(null);
-  const [riderdata, setRiderData] = useState(null);
+  // const [riderdata, setRiderData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -77,9 +77,9 @@ function Bikes() {
     setData(value);
   }
 
-  const HandleSetRiderData = (value) => {
-    setRiderData(value);
-  }
+  // const HandleSetRiderData = (value) => {
+  //   setRiderData(value);
+  // }
 
   const HandleRequest = () => {
     RequestBikes(HandleSetData,HandleSetCount,currentPage,currentPageSize);
@@ -101,16 +101,16 @@ function Bikes() {
       HandleRequest();
     }
   }
-  useEffect(() => {
-    if (selectedRow !== null) {
-      GetBikeRiders(HandleSetRiderData,selectedRow?.b_id);
-    }
+  // useEffect(() => {
+  //   if (selectedRow !== null) {
+  //     GetBikeRiders(HandleSetRiderData,selectedRow?.b_id);
+  //   }
     
-  }, [selectedRow]);
+  // }, [selectedRow]);
 
-  useEffect(() => {
-    setRiderisLoading(false);
-  }, [riderdata]);
+  // useEffect(() => {
+  //   setRiderisLoading(false);
+  // }, [riderdata]);
 
 
   useEffect(() => {
@@ -142,9 +142,9 @@ function Bikes() {
 
   }, [currentPage,currentPageSize,filter]);
 
-  useEffect(() => {
-    console.log(riderdata);
-  }, [riderdata]);
+  // useEffect(() => {
+  //   console.log(riderdata);
+  // }, [riderdata]);
 
   const handleDelete = () => {
     DeleteBike(selectedRow?.b_id);
@@ -212,19 +212,19 @@ function Bikes() {
     { field: 'wheelsize', headerName: 'Wheel Size', width: 150 },
     { field: 'size', headerName: 'Size', width: 150},
     { field: 'price', headerName: 'Price', width: 150},
-    { field: 'counts', headerName: 'No. of Riders', width: 150 },
+    { field: 'no_riders', headerName: 'No. of Riders', width: 150 },
    
   ], []);
 
-  const riderRows = useMemo(() => riderdata?.riders || [], [riderdata]);
-  const riderColumns = useMemo(() => [
-    { field: 'r_name', headerName: 'Name', width: 150 },
-    { field: 'height', headerName: 'Height', width: 150 },
-    { field: 'r_weight', headerName: 'Weight', width: 150 },
-    { field: 'specialization', headerName: 'Specialization', width: 150 },
-    { field: 'email', headerName: 'Email', width: 150 },
-    { field: 'phone', headerName: 'Phone', width: 150 },
-  ], []);
+  // const riderRows = useMemo(() => riderdata?.riders || [], [riderdata]);
+  // const riderColumns = useMemo(() => [
+  //   { field: 'r_name', headerName: 'Name', width: 150 },
+  //   { field: 'height', headerName: 'Height', width: 150 },
+  //   { field: 'r_weight', headerName: 'Weight', width: 150 },
+  //   { field: 'specialization', headerName: 'Specialization', width: 150 },
+  //   { field: 'email', headerName: 'Email', width: 150 },
+  //   { field: 'phone', headerName: 'Phone', width: 150 },
+  // ], []);
   
  return (
     <Box sx={{ flexGrow: 1}} >
@@ -356,7 +356,7 @@ function Bikes() {
         Riders that use this bike model
       </Typography>
 
-      <DataGrid
+      {/* <DataGrid
         //open if selected row is not null
         sx={{width:'fit-content',
               display:'flex' ,
@@ -373,7 +373,7 @@ function Bikes() {
         // pagination: { paginationModel: { pageSize: 5 } },
         // }}
         // pageSizeOptions={[5, 10, 25]}
-        />
+        /> */}
         
 
       <DialogAddBike 

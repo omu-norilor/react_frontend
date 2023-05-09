@@ -158,18 +158,19 @@ function Helmets() {
     { field: 'h_type', headerName: 'Helmet Type', width: 150 },
     { field: 'size', headerName: 'Size', width: 150 },
     { field: 'price', headerName: 'Price', width: 150 },
+    { field: 'no_riders', headerName: 'No. of Riders', width: 150 },
    
   ], []);
   
-  const riderRows = useMemo(() => riderdata?.riders || [], [riderdata]);
-  const riderColumns = useMemo(() => [
-    { field: 'r_name', headerName: 'Name', width: 150 },
-    { field: 'height', headerName: 'Height', width: 150 },
-    { field: 'r_weight', headerName: 'Weight', width: 150 },
-    { field: 'specialization', headerName: 'Specialization', width: 150 },
-    { field: 'email', headerName: 'Email', width: 150 },
-    { field: 'phone', headerName: 'Phone', width: 150 },
-  ], []);
+  // const riderRows = useMemo(() => riderdata?.riders || [], [riderdata]);
+  // const riderColumns = useMemo(() => [
+  //   { field: 'r_name', headerName: 'Name', width: 150 },
+  //   { field: 'height', headerName: 'Height', width: 150 },
+  //   { field: 'r_weight', headerName: 'Weight', width: 150 },
+  //   { field: 'specialization', headerName: 'Specialization', width: 150 },
+  //   { field: 'email', headerName: 'Email', width: 150 },
+  //   { field: 'phone', headerName: 'Phone', width: 150 },
+  // ], []);
 
  return (
     <Box sx={{ flexGrow: 1}} >
@@ -267,7 +268,7 @@ function Helmets() {
         }}
         />
 
-        <DataGrid
+        {/* <DataGrid
         //open if selected row is not null
         sx={{width:'fit-content',
               display:'flex' ,
@@ -284,7 +285,7 @@ function Helmets() {
         //   pagination: { paginationModel: { pageSize: 5 } },
         // }}
         // pageSizeOptions={[5, 10, 25]}
-        />
+        /> */}
 
       <DialogAddHelmet 
          open={openCreate} 

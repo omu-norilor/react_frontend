@@ -117,6 +117,7 @@ function Riders() {
     { field: 'specialization', headerName: 'Specialization', width: 150 },
     { field: 'email', headerName: 'Email', width: 150 },
     { field: 'phone', headerName: 'Phone', width: 150 },
+    { field: 'no_events', headerName: 'No. of Events', width: 150 },
    
   ], []);
   

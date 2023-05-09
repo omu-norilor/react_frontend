@@ -49,7 +49,7 @@ function Riders() {
 
   const [data, setData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [geardata, setGearData] = useState(null);
+  // const [geardata, setGearData] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentPageSize, setCurrentPageSize] = useState(5);
@@ -61,16 +61,16 @@ function Riders() {
     setData(value);
   }
 
-  const HandleSetGearData = (value) => {
-    setGearData(value);
-  }
+  // const HandleSetGearData = (value) => {
+  //   setGearData(value);
+  // }
 
-  useEffect(() => {
-    if (selectedRow !== null) {
-      GetRiderGear(HandleSetGearData,selectedRow?.r_id);
-    }
+  // useEffect(() => {
+  //   if (selectedRow !== null) {
+  //     GetRiderGear(HandleSetGearData,selectedRow?.r_id);
+  //   }
     
-  }, [selectedRow]);
+  // }, [selectedRow]);
 
   const HandleRequest = () => {
     setIsLoading(true);
@@ -147,6 +147,7 @@ function Riders() {
     { field: 'specialization', headerName: 'Specialization', width: 150 },
     { field: 'email', headerName: 'Email', width: 150 },
     { field: 'phone', headerName: 'Phone', width: 150 },
+    { field: 'no_events', headerName: 'No. of Events', width: 150 },
    
   ], []);
   
@@ -250,7 +251,7 @@ function Riders() {
             }}
           />
 
-          <FormGroup>
+          {/* <FormGroup>
             <FormControl>
               <FormLabel>Bike</FormLabel>
               <TextField
@@ -282,7 +283,7 @@ function Riders() {
                 InputProps={{ readOnly: true }}
               />
             </FormControl>
-          </FormGroup>
+          </FormGroup> */}
 
       <DialogAddRider 
          open={openCreate} 
