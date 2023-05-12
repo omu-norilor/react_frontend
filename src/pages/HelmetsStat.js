@@ -43,12 +43,14 @@ function Helmets() {
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentPage , setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
   }
 
   const HandleRequest = () => {
+    setIsLoading(true);
     RequestHelmets(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
 
@@ -65,6 +67,10 @@ function Helmets() {
     console.log("Current page: "+currentPage);
     console.log("Current page size: "+currentPageSize);
   }, [currentPage,currentPageSize]);
+
+  useEffect(() => {
+    setIsLoading(false)
+  }, [data]);
 
   const handleDelete = () => {
     DeleteHelmet(selectedRow?.h_id);
@@ -207,7 +213,7 @@ function Helmets() {
             rows={rows}
             getRowId={(row) => row.h_id}
             onRowClick={handleRowClick}
-            
+            loading={isLoading}
             localeText={{
               footerRowSelected: CustomPagination
             }}

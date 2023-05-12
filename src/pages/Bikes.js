@@ -340,9 +340,9 @@ function Bikes() {
         }} 
       />
 
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} open={selectedRow !== null && selectedRow !== undefined}>
+      {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} open={selectedRow !== null && selectedRow !== undefined}>
         Riders that use this bike model
-      </Typography>
+      </Typography> */}
 
       {/* <DataGrid
         //open if selected row is not null

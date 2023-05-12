@@ -42,12 +42,14 @@ function Eventrider() {
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentPage , setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const HandleSetData = (value) => {
     setData(value);
   }
 
   const HandleRequest = () => {
+    setIsLoading(true);
     RequestEventrider(HandleSetData,HandleSetCount,currentPage,currentPageSize);
   }
 
@@ -59,6 +61,10 @@ function Eventrider() {
     console.log("Count: "+count);
   }, [count]);
 
+  useEffect(() => {
+    setIsLoading(false)
+  }, [data]);
+  
   useEffect(() => {
     HandleRequest();
     console.log("Current page: "+currentPage);
@@ -197,7 +203,7 @@ function Eventrider() {
             rows={rows}
             getRowId={(row) => row.r_id}
             onRowClick={handleRowClick}
-            
+            loading={isLoading}
             localeText={{
               footerRowSelected: CustomPagination
             }}
